@@ -71,6 +71,12 @@ public class CharacterStats {
 		set { currentMana = value; }
 	}
 
+	public int AttackDamage
+	{
+		get { return attackDamage; }
+		set { attackDamage = value; }
+	}
+
 	public int HitRate
 	{
 		get { return hitRate; }
@@ -85,8 +91,8 @@ public class CharacterStats {
 
 	public int DodgeRate
 	{
-		get { return DodgeRate; }
-		set { DodgeRate = value; }
+		get { return dodgeRate; }
+		set { dodgeRate = value; }
 	}
 
 	public int Armor
@@ -171,6 +177,22 @@ public class CharacterStats {
 		{
 			return 100;
 		}
+	}
+
+	public void InitializeCombatStats ()
+	{
+		currentHealth = maxHealth;
+		currentMana = maxMana;
+		attackDamage = calculateAttackDamage ();
+		critRate = calculateCritRate ();
+		dodgeRate = calculateDodgeRate ();
+		hitRate = calculateHitRate ();
+		armor = 3;
+		magicResist = 0;
+		magicAttack = false;
+		attackRange = 1.3f;
+		attackRate = 1.0f;
+		moveSpeed = 2.0f;
 	}
 
 	// Ability and Buff list management

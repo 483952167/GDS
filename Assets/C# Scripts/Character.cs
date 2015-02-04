@@ -8,6 +8,8 @@ public class Character : MonoBehaviour {
 	private bool actionInProgress = false;
 	private bool playerCasting = false; //player is inputting a spell, not character is casting
     private CharacterInstance character;
+	private float attackCooldown = 0f;
+	private CombatManager combatManager = new CombatManager();
 
     private GameObject cube;
     private Character target;
@@ -26,6 +28,8 @@ public class Character : MonoBehaviour {
 		{
 			stats.ResolveBuffs ();
 			actionQueue.Resolve ();
+			AttackCooldownDecrement ();
+
         	//if(target != null)
         	//{
             //	moveToTarget();
@@ -33,9 +37,26 @@ public class Character : MonoBehaviour {
 		}
 	}
 
+	void AttackCooldownDecrement ()
+	{
+		if (attackCooldown > 0)
+		{
+			attackCooldown -= Time.deltaTime;
+		}
+		else if (attackCooldown < 0)
+		{
+			attackCooldown = 0;
+		}
+	}
+	
 	public void Enqueue (Vector3 position) //move order
 	{
 		actionQueue.Enqueue (position);
+	}
+
+	public void Overwrite (Vector3 position) //move order
+	{
+		actionQueue.Overwrite (position);
 	}
 
 	public void Enqueue (Character c)
@@ -175,6 +196,11 @@ public class Character : MonoBehaviour {
         return null;
     }
 
+	public void TakeDamage (int damage)
+	{
+		stats.CurrentHealth -= damage;
+	}
+
 	public void ResolveMovementOrder(MovementOrder currentOrder)
 	{
 		Vector3 movementDirection = currentOrder.destination - character.transform.localPosition;
@@ -187,6 +213,26 @@ public class Character : MonoBehaviour {
 		{
 			movementDirection.Normalize();
 			character.transform.localPosition += movementDirection * Time.deltaTime * stats.MoveSpeed;
+		}
+	}
+
+	public void ResolveAttackOrder(AttackOrder currentOrder)
+	{
+		Character attackTarget = currentOrder.target;
+		Vector3 attackVector = attackTarget.getCharacterPosition () - character.transform.localPosition;
+		float attackDistance = attackVector.magnitude;
+
+		if (attackDistance > stats.AttackRange)
+		{ //if out of range, move towards target
+			attackVector.Normalize();
+			character.transform.localPosition += attackVector * Time.deltaTime * stats.MoveSpeed;
+		}
+		else
+		{
+			if (attackCooldown == 0)
+			{
+				combatManager.Hit(this, attackTarget);
+			}
 		}
 	}
 }

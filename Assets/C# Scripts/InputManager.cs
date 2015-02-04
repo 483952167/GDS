@@ -8,6 +8,7 @@ public class InputManager {
 	private Character selected;
 	private bool isCharacterUnderMouse;
 	private Character characterUnderMouse;
+	private CharacterInstance instanceUnderMouse;
 	private Vector3 mousePosition;
 
 	int floorMask;
@@ -24,6 +25,11 @@ public class InputManager {
 	{
 		get { return enemies; }
 		set { enemies = value; }
+	}
+
+	public void Select (Character c)
+	{
+		selected = c;
 	}
 
 	// Use this for initialization
@@ -63,13 +69,32 @@ public class InputManager {
 
 			if (isCharacterUnderMouse == false) //player right clicked on ground, issue move order
 			{
-				selected.Enqueue(mousePosition);
-				Debug.Log ("Queueing move order to " + mousePosition.x + ", " + mousePosition.y);
+				if (selected != null)
+				{
+					if (Input.GetButton ("Queue"))
+					{
+						selected.Enqueue(mousePosition);
+						Debug.Log ("Queueing move order to " + mousePosition.x + ", " + mousePosition.y);
+					}
+					else
+					{
+						selected.Overwrite(mousePosition);
+						Debug.Log ("Clearing queue, queueing move order to " + mousePosition.x + ", " + mousePosition.y);
+					}
+				}
 			}
 			else //player right clicked on a character, issue attack order
 			{
-				selected.Enqueue(characterUnderMouse);
-				Debug.Log ("Queueing attack order on " + characterUnderMouse.name);
+				if (Input.GetButton ("Queue"))
+				{
+					selected.Enqueue(characterUnderMouse);
+					Debug.Log ("Queueing attack order on " + characterUnderMouse.name);
+				}
+				else
+				{
+					selected.Overwrite(characterUnderMouse);
+					Debug.Log ("Clearing queue, queueing attack order on " + characterUnderMouse.name);
+				}
 			}
 		}
 
@@ -140,12 +165,22 @@ public class InputManager {
 		if (Physics.Raycast (camRay, out characterHit, camRayLength, characterMask))
 		{
 			isCharacterUnderMouse = true;
-			characterUnderMouse = characterHit.collider.GetComponent <Character> ();
+			instanceUnderMouse = characterHit.collider.GetComponentInParent <CharacterInstance> ();
+			if (instanceUnderMouse == null)
+			{
+				Debug.Log ("Character layer hit, but failed to register instance");
+			}
+			else
+			{
+				Debug.Log ("Instance under mouse = " + instanceUnderMouse.name);
+			}
+			characterUnderMouse = instanceUnderMouse.parentChar;
 			Debug.Log ("Character under mouse = " + characterUnderMouse.name);
 		}
 		else
 		{
 			isCharacterUnderMouse = false;
+			Debug.Log ("Floor click");
 		}
 	}
 }

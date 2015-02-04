@@ -26,6 +26,24 @@ public class ActionQueue {
 	{
 		actionQueue.Enqueue (new CastOrder (spell, targetChar, targetPos));
 	}
+
+	public void Overwrite (Vector3 targetPos)
+	{
+		actionQueue.Clear ();
+		actionQueue.Enqueue (new MovementOrder (targetPos));
+	}
+
+	public void Overwrite (Character targetChar)
+	{
+		actionQueue.Clear ();
+		actionQueue.Enqueue (new AttackOrder (targetChar));
+	}
+
+	public void Overwrite (Ability spell, Character targetChar, Vector3 targetPos)
+	{
+		actionQueue.Clear ();
+		actionQueue.Enqueue (new CastOrder (spell, targetChar, targetPos));
+	}
 	
 
 	// Use this for initialization
@@ -41,6 +59,11 @@ public class ActionQueue {
 			{
 				MovementOrder currentOrder = (MovementOrder) actionQueue.Peek ();
 				parentChar.ResolveMovementOrder(currentOrder);
+			}
+			if (actionQueue.Peek () is AttackOrder)
+			{
+				AttackOrder currentOrder = (AttackOrder) actionQueue.Peek ();
+				parentChar.ResolveAttackOrder(currentOrder);
 			}
 		}
 	}
