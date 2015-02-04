@@ -6,9 +6,20 @@ public class ActionQueue {
 	private Character parentChar;
 	private Queue actionQueue = new Queue();
 
+	public Character ParentChar
+	{
+		get { return parentChar; }
+		set { parentChar = value; }
+	}
+
 	public void Enqueue (Vector3 targetPos)
 	{
 		actionQueue.Enqueue (new MovementOrder (targetPos));
+	}
+
+	public void Enqueue (Character targetChar)
+	{
+		actionQueue.Enqueue (new AttackOrder (targetChar));
 	}
 	
 	public void Enqueue (Ability spell, Character targetChar, Vector3 targetPos)
@@ -22,7 +33,22 @@ public class ActionQueue {
 	
 	}
 	
+	public void Resolve ()
+	{
+		if (actionQueue.Count > 0)
+		{
+			if (actionQueue.Peek() is MovementOrder)
+			{
+				MovementOrder currentOrder = (MovementOrder) actionQueue.Peek ();
+				parentChar.ResolveMovementOrder(currentOrder);
+			}
+		}
+	}
 
+	public void Pop ()
+	{
+		actionQueue.Dequeue ();
+	}
 
 }
 

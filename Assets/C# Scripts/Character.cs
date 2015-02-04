@@ -4,7 +4,7 @@ using System.Collections;
 public class Character : MonoBehaviour {
     public CharacterInstance characterPrefab;
 	public CharacterStats stats = new CharacterStats();
-	private ActionQueue actionQueue = new ActionQueue();
+	public ActionQueue actionQueue = new ActionQueue();
 	private bool actionInProgress = false;
 	private bool playerCasting = false; //player is inputting a spell, not character is casting
     private CharacterInstance character;
@@ -25,22 +25,22 @@ public class Character : MonoBehaviour {
 		if (isPaused == false)
 		{
 			stats.ResolveBuffs ();
-			ManageActionQueue ();
-        	if(target != null)
-        	{
-            	moveToTarget();
-        	}
+			actionQueue.Resolve ();
+        	//if(target != null)
+        	//{
+            //	moveToTarget();
+        	//}
 		}
-	}
-
-	void ManageActionQueue ()
-	{
-
 	}
 
 	public void Enqueue (Vector3 position) //move order
 	{
 		actionQueue.Enqueue (position);
+	}
+
+	public void Enqueue (Character c)
+	{
+		actionQueue.Enqueue (c);
 	}
 
 	public void Enqueue (Ability s, Character c, Vector3 p) //cast order
@@ -174,4 +174,19 @@ public class Character : MonoBehaviour {
         }
         return null;
     }
+
+	public void ResolveMovementOrder(MovementOrder currentOrder)
+	{
+		Vector3 movementDirection = currentOrder.destination - character.transform.localPosition;
+		if (movementDirection.magnitude < .1)
+		{
+			actionQueue.Pop();
+			Debug.Log ("Character " + name + " completed movement order");
+		}
+		else
+		{
+			movementDirection.Normalize();
+			character.transform.localPosition += movementDirection * Time.deltaTime * stats.MoveSpeed;
+		}
+	}
 }
