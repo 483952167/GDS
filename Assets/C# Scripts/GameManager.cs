@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour {
 		playerCharA.Generate(new Vector3(-5.0f, -5.0f, -0.5f));
 		//playerCharA.actionQueue.ParentChar = playerCharA;
 		playerCharA.name = "Hero A";
+		playerCharA.gameObject.AddComponent("ClickToMove");
 
 		/*playerCharB = Instantiate (characterPrefab) as Character;
 		playerCharB.Generate (new Vector3 (-2.7f, 0f, 0f));
@@ -77,10 +78,10 @@ public class GameManager : MonoBehaviour {
         enemy.Generate(new Vector3(2.7f, 5f, -0.5f));
         enemy.setMaterial(enemyMaterial);
 		enemy.name = "Enemy";
-		Destroy (enemy.GetComponent<ClickToMove> ());
+		enemy.gameObject.AddComponent("EnemyMovement");
 
         //playerCharA.setTarget(enemy);
-        //enemy.setTarget(playerCharA);
+        enemy.setTarget(playerCharA);
 
         enemies.addEnemy(enemy);
     }

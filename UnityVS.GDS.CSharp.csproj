@@ -70,6 +70,7 @@
     <Compile Include="Assets\C# Scripts\ClickToMove.cs" />
     <Compile Include="Assets\C# Scripts\CombatManager.cs" />
     <Compile Include="Assets\C# Scripts\EnemyCollection.cs" />
+    <Compile Include="Assets\C# Scripts\EnemyMovement.cs" />
     <Compile Include="Assets\C# Scripts\GameManager.cs" />
     <Compile Include="Assets\C# Scripts\InputManager.cs" />
     <Compile Include="Assets\C# Scripts\MovementOrder.cs" />

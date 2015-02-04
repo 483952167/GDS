@@ -8,7 +8,7 @@ public class ClickToMove : MonoBehaviour {
 	private bool flag = false;
 	private Vector3 endPoint;
 	//alter this to change the speed of the movement of player / gameobject
-	private float duration = 10.0f;
+	private float duration = 5.0f;
 	//vertical position of the gameobject
 	private float zAxis;
 	//0 means clicked on ground, 1 means clicked on character

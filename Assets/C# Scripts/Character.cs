@@ -10,7 +10,7 @@ public class Character : MonoBehaviour {
     private CharacterInstance character;
 
     private GameObject cube;
-    private Character target;
+    public Character target;
 	public bool isPaused;
 
     private int status = CharacterStatus.WAITING;
