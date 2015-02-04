@@ -3,16 +3,15 @@ using System.Collections;
 
 public class Character : MonoBehaviour {
     public CharacterInstance characterPrefab;
+	public CharacterStats stats = new CharacterStats();
+	private ActionQueue actionQueue = new ActionQueue();
+	private bool actionInProgress = false;
+	private bool playerCasting = false; //player is inputting a spell, not character is casting
     private CharacterInstance character;
-
-    private int maxHealth;
-    private int currentHealth;
-    private int maxMana;
-    private int currentMana;
-    private float attackRange = 1.30f;
 
     private GameObject cube;
     private Character target;
+	public bool isPaused;
 
     private int status = CharacterStatus.WAITING;
 
@@ -23,10 +22,94 @@ public class Character : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(target != null)
-        {
-            moveToTarget();
-        }
+		if (isPaused == false)
+		{
+			stats.ResolveBuffs ();
+			ManageActionQueue ();
+        	if(target != null)
+        	{
+            	moveToTarget();
+        	}
+		}
+	}
+
+	void ManageActionQueue ()
+	{
+
+	}
+
+	public void Enqueue (Vector3 position) //move order
+	{
+		actionQueue.Enqueue (position);
+	}
+
+	public void Enqueue (Ability s, Character c, Vector3 p) //cast order
+	{
+		actionQueue.Enqueue (s, c, p);
+	}
+
+	public void SpellCast (Ability spell, CharacterCollection allies, EnemyCollection enemies)
+	{
+		playerCasting = true;
+		while (playerCasting == true)
+		{
+			if (spell.targetOption == AbilityTargetOption.SELF)
+			{
+				Enqueue (spell, new Character(), new Vector3());
+				playerCasting = false;
+			}
+			else if (spell.targetOption == AbilityTargetOption.TARGET_ALLY)
+			{	//for now, targeting based on pressing numbers - will implement click-targeting
+				if (Input.GetButtonDown ("Ability 1"))
+				{
+					Enqueue (spell, allies.getHero(0), new Vector3());
+					playerCasting = false;
+				}
+				else if (Input.GetButtonDown ("Ability 2"))
+				{
+					Enqueue (spell, allies.getHero(1), new Vector3());
+					playerCasting = false;
+				}
+				else if (Input.GetButtonDown ("Ability 3"))
+				{
+					Enqueue (spell, allies.getHero(2), new Vector3());
+					playerCasting = false;
+				}
+			}
+			else if (spell.targetOption == AbilityTargetOption.TARGET_ENEMY)
+			{
+				if (Input.GetButtonDown ("Ability 1"))
+				{
+					Enqueue (spell, enemies.getEnemy(0), new Vector3());
+					playerCasting = false;
+				}
+				else if (Input.GetButtonDown ("Ability 2"))
+				{
+					Enqueue (spell, enemies.getEnemy(1), new Vector3());
+					playerCasting = false;
+				}
+				else if (Input.GetButtonDown ("Ability 3"))
+				{
+					Enqueue (spell, enemies.getEnemy(2), new Vector3());
+					playerCasting = false;
+				}
+			}
+			else if (spell.targetOption == AbilityTargetOption.TARGET_LOCATION)
+			{
+					
+			}
+			else if (spell.targetOption == AbilityTargetOption.NONE)
+			{
+				Enqueue (spell, new Character(), new Vector3());
+				playerCasting = false;
+			}
+		}
+	}
+
+	//for when the player hits a spell key, but then issues a different command
+	public void PlayerCastInterrupt()
+	{
+		playerCasting = false;
 	}
 
     public void Generate() {
@@ -68,11 +151,11 @@ public class Character : MonoBehaviour {
         if(directionVector != null)
         {
             float dist = directionVector.Value.magnitude;
-            if (dist > attackRange)
+            if (dist > stats.AttackRange)
             {
-                character.transform.localPosition += new Vector3(directionVector.Value.x * Time.deltaTime, 
-                                                                 directionVector.Value.y * Time.deltaTime, 
-                                                                 directionVector.Value.z * Time.deltaTime);
+                character.transform.localPosition += new Vector3(directionVector.Value.x * Time.deltaTime * stats.MoveSpeed / dist, 
+                                                                 directionVector.Value.y * Time.deltaTime * stats.MoveSpeed / dist, 
+                                                                 directionVector.Value.z * Time.deltaTime * stats.MoveSpeed / dist);
 
                 return CharacterStatus.MOVING;
             }

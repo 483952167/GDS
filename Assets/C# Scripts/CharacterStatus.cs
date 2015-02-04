@@ -8,4 +8,5 @@ public class CharacterStatus{
     public static int TURNING = 4;
     public static int WAITING = 5;
     public static int ARRIVED = 6;
+	public static int DEAD = 7;
 }

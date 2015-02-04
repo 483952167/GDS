@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 
 public class EnemyCollection {
-    private static List<Character> enemies = new List<Character>();
+    private List<Character> enemies = new List<Character>();
 
-    public static void addEnemy(Character enemy) {
+    public void addEnemy(Character enemy) {
         enemies.Add(enemy);
     }
 
-    public static Vector3? getEnemyPosition(int index) {
+    public Character getEnemy(int index) {
         if(index > -1 && index < enemies.Count)
         {
-            return enemies.ToArray()[0].getCharacterPosition();
+            return enemies.ToArray()[0];
         }
         else
         {

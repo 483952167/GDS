@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 
 public class CharacterCollection {
-    private static List<Character> heroes;
+    private List<Character> heroes = new List<Character>();
 
-    public static void addHero(Character hero) {
+    public void addHero(Character hero) {
         heroes.Add(hero);
     }
 
-    public static Vector3? getHeroPosition(int index) {
+    public Character getHero(int index) {
         if(-1 < index && index < heroes.Count)
         {
-            return heroes.ToArray()[index].getCharacterPosition();
+            return heroes.ToArray()[index];
         }
         else
         {
