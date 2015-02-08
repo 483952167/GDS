@@ -62,7 +62,7 @@ public class InputManager {
 			Debug.Log ("Character C selected");
 		}
 		
-		/*if (Input.GetMouseButtonDown(1)) //right click
+		if (Input.GetMouseButtonDown(1)) //right click
 		{
 			Debug.Log ("Right click");
 			CharacterMouseCheck();
@@ -96,7 +96,7 @@ public class InputManager {
 					Debug.Log ("Clearing queue, queueing attack order on " + characterUnderMouse.name);
 				}
 			}
-		}*/
+		}
 
 		if (Input.GetMouseButtonDown (0)) //left click
 		{

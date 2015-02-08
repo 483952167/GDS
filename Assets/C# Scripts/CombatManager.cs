@@ -47,6 +47,19 @@ public class CombatManager {
 			defender.TakeDamage(attackDamage);
 		}
 
+		if (crit && hit)
+		{
+			Debug.Log ("Crit!");
+		}
+		else if (hit)
+		{
+			Debug.Log ("Hit!");
+		}
+		else
+		{
+			Debug.Log ("Miss!");
+		}
+
 	}
 
 	// Use this for initialization

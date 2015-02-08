@@ -12,8 +12,9 @@ public class Character : MonoBehaviour {
 	private CombatManager combatManager = new CombatManager();
 
     private GameObject cube;
-    public Character target;
+    private Character target;
 	public bool isPaused;
+	public bool isDead = false;
 
     private int status = CharacterStatus.WAITING;
 
@@ -24,8 +25,9 @@ public class Character : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		/*if (isPaused == false)
+		if (isPaused == false)
 		{
+			DeathCheck ();
 			stats.ResolveBuffs ();
 			actionQueue.Resolve ();
 			AttackCooldownDecrement ();
@@ -34,7 +36,16 @@ public class Character : MonoBehaviour {
         	//{
             //	moveToTarget();
         	//}
-		}*/
+		}
+	}
+
+	void DeathCheck ()
+	{
+		if (stats.CurrentHealth <= 0)
+		{
+			stats.CurrentHealth = 0;
+			isDead = true;
+		}
 	}
 
 	void AttackCooldownDecrement ()
@@ -62,6 +73,11 @@ public class Character : MonoBehaviour {
 	public void Enqueue (Character c)
 	{
 		actionQueue.Enqueue (c);
+	}
+
+	public void Overwrite (Character c)
+	{
+		actionQueue.Overwrite (c);
 	}
 
 	public void Enqueue (Ability s, Character c, Vector3 p) //cast order
@@ -136,17 +152,15 @@ public class Character : MonoBehaviour {
     public void Generate() {
         character = Instantiate(characterPrefab) as CharacterInstance;
         character.transform.parent = transform;
-        transform.localPosition = new Vector3(0f, 0f, -0.5f);
+        character.transform.localPosition = new Vector3(0f, 0f, 0f);
         cube = character.transform.GetChild(0).gameObject;
-		//cube.transform.position = character.transform.localPosition;
     }
 
     public void Generate(Vector3 pos) {
         character = Instantiate(characterPrefab) as CharacterInstance;
         character.transform.parent = transform;
-        transform.localPosition = pos;
+        character.transform.localPosition = pos;
         cube = character.transform.GetChild(0).gameObject;
-		//cube.transform.position = pos;
     }
 
     public void MoveForward() {
@@ -201,6 +215,7 @@ public class Character : MonoBehaviour {
 	public void TakeDamage (int damage)
 	{
 		stats.CurrentHealth -= damage;
+		DeathCheck ();
 	}
 
 	public void ResolveMovementOrder(MovementOrder currentOrder)
@@ -224,6 +239,12 @@ public class Character : MonoBehaviour {
 		Vector3 attackVector = attackTarget.getCharacterPosition () - character.transform.localPosition;
 		float attackDistance = attackVector.magnitude;
 
+		if (attackTarget.isDead == true)
+		{
+			Debug.Log ("Attack target of " + stats.Name + " is dead. Cancelling attack order");
+			actionQueue.Pop ();
+		}
+
 		if (attackDistance > stats.AttackRange)
 		{ //if out of range, move towards target
 			attackVector.Normalize();
@@ -234,6 +255,9 @@ public class Character : MonoBehaviour {
 			if (attackCooldown == 0)
 			{
 				combatManager.Hit(this, attackTarget);
+				Debug.Log ("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
+				Debug.Log (attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
+				attackCooldown = stats.AttackRate;
 			}
 		}
 	}
