@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Buff : MonoBehaviour {
+public class Buff {
 
 	public Character target;
 	public float duration, elapsedTime;
@@ -9,7 +9,7 @@ public class Buff : MonoBehaviour {
 						// ex. a Purge spell that removes debuffs from an ally or buffs from an enemy
 
 	// Use this for initialization
-	void Start () {
+	public void Start () {
 
 	}
 	

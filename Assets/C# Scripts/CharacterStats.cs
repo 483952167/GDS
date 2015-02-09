@@ -217,6 +217,7 @@ public class CharacterStats {
 	public void RemoveBuff (Buff buff)
 	{
 		buffs.Remove (buff);
+
 	}
 
 	public void ResolveBuffs ()
