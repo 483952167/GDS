@@ -287,4 +287,8 @@ public class Character : MonoBehaviour {
 			}
 		}
 	}
+
+    public Character getTarget() {
+        return target;
+    }
 }

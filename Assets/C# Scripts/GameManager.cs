@@ -136,6 +136,7 @@ public class GameManager : MonoBehaviour {
 		enemy.stats.Agility = 5;
 		enemy.stats.Intelligence = 5;
 		enemy.stats.InitializeCombatStats ();
+        enemy.gameObject.AddComponent("EnemyMovement");
 
         playerCharA.setTarget(enemy);
         enemy.setTarget(playerCharA);
