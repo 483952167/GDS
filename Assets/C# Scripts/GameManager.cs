@@ -25,8 +25,11 @@ public class GameManager : MonoBehaviour {
     public Material enemyMaterial;
     public Material heroMaterial;
 
+    private int seed = 123456789;
+
 	// Use this for initialization
 	void Start () {
+        Random.seed = seed;
         BeginGame();
 		allies.addHero (playerCharA);
 		allies.addHero (playerCharB);
@@ -41,6 +44,10 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		inputManager.Allies = allies;
+        	if(Input.GetButtonDown("Regenerate Map"))
+        	{
+            		roomInstance.GenerateNextRoom();
+        	}
 		inputManager.Enemies = enemies;
 
 		if (Input.GetButtonDown("Pause"))
