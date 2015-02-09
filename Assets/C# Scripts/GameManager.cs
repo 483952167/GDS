@@ -25,22 +25,31 @@ public class GameManager : MonoBehaviour {
     public Material enemyMaterial;
     public Material heroMaterial;
 
+    private int seed = 123456789;
+
 	// Use this for initialization
 	void Start () {
+        Random.seed = seed;
         BeginGame();
-		allies.addHero (playerCharA);
+		/*allies.addHero (playerCharA);
 		allies.addHero (playerCharB);
 		allies.addHero (playerCharC);
 		enemies.addEnemy (enemy);
+
 		inputManager.Awake ();
 		inputManager.Allies = allies;
 		inputManager.Enemies = enemies;
-		inputManager.Select (playerCharA);
+		inputManager.Select (playerCharA);*/
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		inputManager.Allies = allies;
+        if(Input.GetButtonDown("Regenerate Map"))
+        {
+            roomInstance.GenerateNextRoom();
+        }
+		/*inputManager.Allies = allies;
 		inputManager.Enemies = enemies;
 
 		if (Input.GetButtonDown("Pause"))
@@ -53,7 +62,7 @@ public class GameManager : MonoBehaviour {
 		playerCharC.isPaused = isPaused;
 		enemy.isPaused = isPaused;
 
-		inputManager.Resolve ();
+		inputManager.Resolve ();*/
 
 	}
 
@@ -61,24 +70,25 @@ public class GameManager : MonoBehaviour {
         roomInstance = Instantiate(roomPrefab) as Room;
         roomInstance.Generate();
 
-        playerCharA = Instantiate (characterPrefab) as Character;
-		playerCharA.characterPrefab.SetParentChar(playerCharA);
-		playerCharA.characterPrefab.name = "Hero A Prefab";
-		playerCharA.Generate(new Vector3(-2.7f, -5.0f, 0f));
-		playerCharA.actionQueue.ParentChar = playerCharA;
-		playerCharA.tag = "Hero A";
+		playerCharA = Instantiate (characterPrefab) as Character;
+		//playerCharA.characterPrefab.SetParentChar(playerCharA);
+		//playerCharA.characterPrefab.name = "Hero A Prefab";
+		playerCharA.Generate(new Vector3(-5.0f, -5.0f, -0.5f));
+		//playerCharA.actionQueue.ParentChar = playerCharA;
+		//playerCharA.tag = "Hero A";
 		playerCharA.name = "Hero A";
-		playerCharA.stats.Name = "Hero A";
+		/*playerCharA.stats.Name = "Hero A";
 		playerCharA.stats.MaxHealth = 50;
 		playerCharA.stats.MaxMana = 30;
 		playerCharA.stats.Strength = 7;
 		playerCharA.stats.Agility = 5;
 		playerCharA.stats.Intelligence = 5;
-		playerCharA.stats.InitializeCombatStats ();
-
-		playerCharB = Instantiate (characterPrefab) as Character;
+		playerCharA.stats.InitializeCombatStats ();*/
+		playerCharA.gameObject.AddComponent("ClickToMove");
+        roomInstance.SpawnCharacters(DoorPositions.WEST, playerCharA);
+		/*playerCharB = Instantiate (characterPrefab) as Character;
+		playerCharB.characterPrefab.SetParentChar (playerCharB);
 		playerCharB.characterPrefab.name = "Hero B Prefab";
-		playerCharB.characterPrefab.SetParentChar(playerCharB);
 		playerCharB.Generate (new Vector3 (-2.7f, 0f, 0f));
 		playerCharB.actionQueue.ParentChar = playerCharB;
 		playerCharB.tag = "Hero B";
@@ -90,13 +100,13 @@ public class GameManager : MonoBehaviour {
 		playerCharB.stats.Agility = 8;
 		playerCharB.stats.Intelligence = 5;
 		playerCharB.stats.InitializeCombatStats ();
-		playerCharB.stats.AttackRange = 5.0f;
+		playerCharB.stats.AttackRange = 5.0f;*/
 
-		playerCharC = Instantiate (characterPrefab) as Character;
+		/*playerCharC = Instantiate (characterPrefab) as Character;
 		playerCharC.characterPrefab.name = "Hero C Prefab";
 		playerCharC.characterPrefab.SetParentChar(playerCharC);
 		playerCharC.Generate (new Vector3 (-2.7f, 5.0f, 0f));
-		playerCharC.actionQueue.ParentChar = playerCharC;
+        playerCharC.actionQueue.ParentChar = playerCharC;
 		playerCharC.tag = "Hero C";
 		playerCharC.name = "Hero C";
 		playerCharC.stats.Name = "Hero C";
@@ -107,23 +117,25 @@ public class GameManager : MonoBehaviour {
 		playerCharC.stats.Intelligence = 8;
 		playerCharC.stats.InitializeCombatStats ();
 		playerCharC.stats.AttackRange = 4.0f;
-		playerCharC.stats.MagicAttack = true;
+		playerCharC.stats.MagicAttack = true;*/
 		
 		enemy = Instantiate(characterPrefab) as Character;
 		enemy.characterPrefab.name = "Enemy Prefab";
-		enemy.characterPrefab.SetParentChar(enemy);
-        enemy.Generate(new Vector3(2.7f, 5.0f, 0f));
+		//enemy.characterPrefab.SetParentChar(enemy);
+		enemy.Generate(new Vector3(2.7f, 5f, -0.5f));
         enemy.setMaterial(enemyMaterial);
 		enemy.name = "Enemy";
-		enemy.stats.Name = "Enemy";
+		/*enemy.stats.Name = "Enemy";
 		enemy.stats.MaxHealth = 50;
 		enemy.stats.MaxMana = 30;
 		enemy.stats.Strength = 5;
 		enemy.stats.Agility = 5;
 		enemy.stats.Intelligence = 5;
-		enemy.stats.InitializeCombatStats ();
+		enemy.stats.InitializeCombatStats ();*/
+		enemy.gameObject.AddComponent("EnemyMovement");
 
-        playerCharA.setTarget(enemy);
+
+        //playerCharA.setTarget(enemy);
         enemy.setTarget(playerCharA);
 
         enemies.addEnemy(enemy);

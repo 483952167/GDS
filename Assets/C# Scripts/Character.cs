@@ -12,7 +12,7 @@ public class Character : MonoBehaviour {
 	private CombatManager combatManager = new CombatManager();
 
     private GameObject cube;
-    private Character target;
+    public Character target;
 	public bool isPaused;
 
     private int status = CharacterStatus.WAITING;
@@ -24,7 +24,7 @@ public class Character : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (isPaused == false)
+		/*if (isPaused == false)
 		{
 			stats.ResolveBuffs ();
 			actionQueue.Resolve ();
@@ -34,7 +34,7 @@ public class Character : MonoBehaviour {
         	//{
             //	moveToTarget();
         	//}
-		}
+		}*/
 	}
 
 	void AttackCooldownDecrement ()
@@ -136,15 +136,17 @@ public class Character : MonoBehaviour {
     public void Generate() {
         character = Instantiate(characterPrefab) as CharacterInstance;
         character.transform.parent = transform;
-        character.transform.localPosition = new Vector3(0f, 0f, 0f);
+        transform.localPosition = new Vector3(0f, 0f, -0.5f);
         cube = character.transform.GetChild(0).gameObject;
+		//cube.transform.position = character.transform.localPosition;
     }
 
     public void Generate(Vector3 pos) {
         character = Instantiate(characterPrefab) as CharacterInstance;
         character.transform.parent = transform;
-        character.transform.localPosition = pos;
+        transform.localPosition = pos;
         cube = character.transform.GetChild(0).gameObject;
+		//cube.transform.position = pos;
     }
 
     public void MoveForward() {
@@ -161,6 +163,10 @@ public class Character : MonoBehaviour {
 
     public Vector3 getCharacterPosition() {
         return character.transform.localPosition;
+    }
+
+    public void setCharacterPosition(Vector3 pos) {
+        transform.localPosition = pos;
     }
 
     public void setTarget(Character c) {
