@@ -44,12 +44,12 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		inputManager.Allies = allies;
-        	if(Input.GetButtonDown("Regenerate Map"))
-        	{
-            		roomInstance.GenerateNextRoom();
-        	}
 		inputManager.Enemies = enemies;
 
+        if (Input.GetButtonDown("Regenerate Map"))
+        {
+            roomInstance.GenerateNextRoom();
+        }
 		if (Input.GetButtonDown("Pause"))
 		{
 			isPaused = !isPaused;
