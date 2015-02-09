@@ -1,22 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Ability : MonoBehaviour {
+public class Ability {
 
 	public Character caster;
 	public int targetOption;
 	public int manaCost;
 	public float cooldown, castTime, range;
 
-	public string tooltip;
+	public string name, tooltip;
 
 	// Use this for initialization
-	void Start () {
+	public void Start () {
 	
 	}
 
 	// Resolve function handles actual effects of spell - damage, buff application, healing, etc.
-	public void Resolve () {
+	public void Resolve (Character targetChar, Vector3 targetLocation) {
 
 	}
 	

@@ -92,6 +92,11 @@ public class GameManager : MonoBehaviour {
 		playerCharB.stats.InitializeCombatStats ();
 		playerCharB.stats.AttackRange = 5.0f;
 
+		Heal heal = new Heal ();
+		heal.Start ();
+		Frostbolt frostbolt = new Frostbolt ();
+		frostbolt.Start ();
+
 		playerCharC = Instantiate (characterPrefab) as Character;
 		playerCharC.characterPrefab.name = "Hero C Prefab";
 		playerCharC.characterPrefab.SetParentChar(playerCharC);
@@ -108,6 +113,8 @@ public class GameManager : MonoBehaviour {
 		playerCharC.stats.InitializeCombatStats ();
 		playerCharC.stats.AttackRange = 4.0f;
 		playerCharC.stats.MagicAttack = true;
+		playerCharC.stats.abilities.Add (heal);
+		playerCharC.stats.abilities.Add (frostbolt);
 		
 		enemy = Instantiate(characterPrefab) as Character;
 		enemy.characterPrefab.name = "Enemy Prefab";

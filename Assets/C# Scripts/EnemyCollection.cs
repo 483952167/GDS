@@ -8,6 +8,11 @@ public class EnemyCollection {
         enemies.Add(enemy);
     }
 
+	public int NumberOfEnemies ()
+	{
+		return enemies.Count;
+	}
+
     public Character getEnemy(int index) {
         if(index > -1 && index < enemies.Count)
         {

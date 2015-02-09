@@ -6,10 +6,13 @@ public class Character : MonoBehaviour {
 	public CharacterStats stats = new CharacterStats();
 	public ActionQueue actionQueue = new ActionQueue();
 	private bool actionInProgress = false;
-	private bool playerCasting = false; //player is inputting a spell, not character is casting
+	public bool playerCasting = false; //player is inputting a spell, not character is casting
     private CharacterInstance character;
 	private float attackCooldown = 0f;
+	private float timeUntilCast = 0f;
 	private CombatManager combatManager = new CombatManager();
+	private InputManager inputManager = new InputManager();
+	public Ability currentSpell;
 
     private GameObject cube;
     private Character target;
@@ -21,6 +24,11 @@ public class Character : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 	    
+	}
+
+	public void SetCastTime (float castTime)
+	{
+		timeUntilCast = castTime;
 	}
 	
 	// Update is called once per frame
@@ -65,12 +73,12 @@ public class Character : MonoBehaviour {
 		actionQueue.Enqueue (position);
 	}
 
-	public void Overwrite (Vector3 position) //move order
+	public void Overwrite (Vector3 position)
 	{
 		actionQueue.Overwrite (position);
 	}
 
-	public void Enqueue (Character c)
+	public void Enqueue (Character c) //attack order
 	{
 		actionQueue.Enqueue (c);
 	}
@@ -85,10 +93,14 @@ public class Character : MonoBehaviour {
 		actionQueue.Enqueue (s, c, p);
 	}
 
+	public void Overwrite (Ability s, Character c, Vector3 p)
+	{
+		actionQueue.Overwrite (s, c, p);
+	}
+
 	public void SpellCast (Ability spell, CharacterCollection allies, EnemyCollection enemies)
 	{
-		playerCasting = true;
-		while (playerCasting == true)
+		if (playerCasting == true)
 		{
 			if (spell.targetOption == AbilityTargetOption.SELF)
 			{
@@ -96,44 +108,18 @@ public class Character : MonoBehaviour {
 				playerCasting = false;
 			}
 			else if (spell.targetOption == AbilityTargetOption.TARGET_ALLY)
-			{	//for now, targeting based on pressing numbers - will implement click-targeting
-				if (Input.GetButtonDown ("Ability 1"))
-				{
-					Enqueue (spell, allies.getHero(0), new Vector3());
-					playerCasting = false;
-				}
-				else if (Input.GetButtonDown ("Ability 2"))
-				{
-					Enqueue (spell, allies.getHero(1), new Vector3());
-					playerCasting = false;
-				}
-				else if (Input.GetButtonDown ("Ability 3"))
-				{
-					Enqueue (spell, allies.getHero(2), new Vector3());
-					playerCasting = false;
-				}
+			{
+				Debug.Log ("Target ally");
+				currentSpell = spell;
 			}
 			else if (spell.targetOption == AbilityTargetOption.TARGET_ENEMY)
 			{
-				if (Input.GetButtonDown ("Ability 1"))
-				{
-					Enqueue (spell, enemies.getEnemy(0), new Vector3());
-					playerCasting = false;
-				}
-				else if (Input.GetButtonDown ("Ability 2"))
-				{
-					Enqueue (spell, enemies.getEnemy(1), new Vector3());
-					playerCasting = false;
-				}
-				else if (Input.GetButtonDown ("Ability 3"))
-				{
-					Enqueue (spell, enemies.getEnemy(2), new Vector3());
-					playerCasting = false;
-				}
+				Debug.Log ("Target enemy");
+				currentSpell = spell;
 			}
 			else if (spell.targetOption == AbilityTargetOption.TARGET_LOCATION)
 			{
-					
+				Debug.Log ("Target location");
 			}
 			else if (spell.targetOption == AbilityTargetOption.NONE)
 			{
@@ -143,9 +129,10 @@ public class Character : MonoBehaviour {
 		}
 	}
 
-	//for when the player hits a spell key, but then issues a different command
+	//for when the player hits a spell key, but then issues a different command or cancels
 	public void PlayerCastInterrupt()
 	{
+		Debug.Log (stats.Name + " cast interrupt");
 		playerCasting = false;
 	}
 
@@ -258,6 +245,33 @@ public class Character : MonoBehaviour {
 				Debug.Log ("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
 				Debug.Log (attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
 				attackCooldown = stats.AttackRate;
+			}
+		}
+	}
+
+	public void ResolveCastOrder (CastOrder currentOrder)
+	{
+		Character targetCharacter = currentOrder.targetCharacter;
+		Vector3 targetLocation = currentOrder.targetLocation;
+		Ability spell = currentOrder.spell;
+		Debug.Log ("timeUntilCast = " + timeUntilCast);
+
+		if (stats.CurrentMana < spell.manaCost)
+		{
+			Debug.Log ("Not enough mana!");
+		}
+		else
+		{
+			if (timeUntilCast > 0f)
+			{
+				timeUntilCast -= Time.deltaTime;
+			}
+			else
+			{
+				stats.CurrentMana -= spell.manaCost;
+				Debug.Log ("Spell " + spell.name + " resolving");
+				spell.Resolve (targetCharacter, targetLocation);
+				actionQueue.Pop();
 			}
 		}
 	}

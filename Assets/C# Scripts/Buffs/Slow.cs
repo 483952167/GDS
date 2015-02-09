@@ -4,7 +4,7 @@ using System.Collections;
 public class Slow : Buff {
 
 	// Use this for initialization
-	void Start () {
+	public void Start () {
 		duration = 5.0f;
 		debuff = true;
 		elapsedTime = 0f;

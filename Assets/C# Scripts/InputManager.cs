@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class InputManager {
 
 	private CharacterCollection allies;
 	private EnemyCollection enemies;
 	private Character selected;
-	private bool isCharacterUnderMouse;
-	private Character characterUnderMouse;
+	public bool isCharacterUnderMouse;
+	public Character characterUnderMouse;
 	private CharacterInstance instanceUnderMouse;
 	private Vector3 mousePosition;
 
@@ -45,6 +45,9 @@ public class InputManager {
 	public void Resolve () {
 		//Debug.Log ("Inside inputManager.Resolve()");
 		UpdateMousePosition ();
+
+		CancelCheck ();
+		SpellTarget ();
 
 		if (Input.GetButtonDown ("Select Character A"))
 		{
@@ -98,7 +101,7 @@ public class InputManager {
 			}
 		}
 
-		if (Input.GetMouseButtonDown (0)) //left click
+		if (Input.GetMouseButtonDown (0) && selected.playerCasting == false) //left click
 		{
 			CharacterMouseCheck ();
 			Debug.Log ("Left click");
@@ -115,31 +118,45 @@ public class InputManager {
 				}
 			}
 		}
-		
-		if (Input.GetButtonDown ("Ability 1"))
+
+		if (selected.playerCasting == false)
 		{
-			Ability spell = selected.stats.abilities.ToArray()[0];
-			selected.SpellCast(spell, allies, enemies);
+			if (Input.GetButtonDown ("Ability 1"))
+			{
+				SpellCast(0);
+			}
+			else if (Input.GetButtonDown ("Ability 2"))
+			{
+				SpellCast(1);
+			}
+			else if (Input.GetButtonDown ("Ability 3"))
+			{
+				SpellCast(2);
+			}
+			else if (Input.GetButtonDown ("Ability 4"))
+			{
+				SpellCast(3);
+			}
+			else if (Input.GetButtonDown ("Ability 5"))
+			{
+				SpellCast(4);
+			}
 		}
-		else if (Input.GetButtonDown ("Ability 2"))
+	}
+
+	void SpellCast (int index)
+	{
+		Ability spell = selected.stats.abilities.ToArray () [index];
+		if (spell == null)
 		{
-			Ability spell = selected.stats.abilities.ToArray()[1];
-			selected.SpellCast(spell, allies, enemies);
+			Debug.Log ("No spell in that slot");
 		}
-		else if (Input.GetButtonDown ("Ability 3"))
+		else
 		{
-			Ability spell = selected.stats.abilities.ToArray()[2];
-			selected.SpellCast(spell, allies, enemies);
-		}
-		else if (Input.GetButtonDown ("Ability 4"))
-		{
-			Ability spell = selected.stats.abilities.ToArray()[3];
-			selected.SpellCast(spell, allies, enemies);
-		}
-		else if (Input.GetButtonDown ("Ability 5"))
-		{
-			Ability spell = selected.stats.abilities.ToArray()[4];
-			selected.SpellCast(spell, allies, enemies);
+			Debug.Log ("Input - " + selected.name + " casting " + spell.name);
+			selected.playerCasting = true;
+			selected.SetCastTime (spell.castTime);
+			selected.SpellCast (spell, allies, enemies);
 		}
 	}
 
@@ -158,7 +175,7 @@ public class InputManager {
 		}
 	}
 
-	void CharacterMouseCheck () {
+	public void CharacterMouseCheck () {
 		Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 		RaycastHit characterHit;
 
@@ -181,6 +198,63 @@ public class InputManager {
 		{
 			isCharacterUnderMouse = false;
 			Debug.Log ("Floor click");
+		}
+	}
+
+	void CancelCheck ()
+	{
+		if (Input.GetButtonDown("Cancel"))
+		{
+			Debug.Log ("Cancel");
+			selected.actionQueue.Clear();
+			selected.PlayerCastInterrupt();
+		}
+	}
+
+	void SpellTarget ()
+	{
+		Ability spell = selected.currentSpell;
+		if (selected.playerCasting)
+		{
+			if (spell.targetOption == AbilityTargetOption.TARGET_ALLY)
+			{
+				if (Input.GetMouseButtonDown (0))
+				{
+					CharacterMouseCheck();
+					if (isCharacterUnderMouse)
+					{
+						for (int i = 0; i <= 2; i++)
+						{
+							if (allies.getHero(i) == characterUnderMouse)
+							{
+								Debug.Log ("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
+								selected.Enqueue (spell, characterUnderMouse, new Vector3());
+								selected.playerCasting = false;
+							}
+						}
+					}
+				}
+			}
+			else if (spell.targetOption == AbilityTargetOption.TARGET_ENEMY)
+			{
+				if (Input.GetMouseButtonDown (0))
+				{
+					CharacterMouseCheck();
+					if (isCharacterUnderMouse)
+					{
+						for (int i = 0; i <= enemies.NumberOfEnemies(); i++)
+						{
+							if (enemies.getEnemy(i) == characterUnderMouse)
+							{
+								Debug.Log ("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
+								selected.Enqueue (spell, characterUnderMouse, new Vector3());
+								selected.playerCasting = false;
+							}
+						}
+					}
+				}
+			}
+
 		}
 	}
 }
