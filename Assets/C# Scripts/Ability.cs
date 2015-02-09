@@ -16,8 +16,8 @@ public class Ability {
 	}
 
 	// Resolve function handles actual effects of spell - damage, buff application, healing, etc.
-	public void Resolve (Character targetChar, Vector3 targetLocation) {
-
+	public virtual void Resolve (Character targetChar, Vector3 targetLocation) {
+		Debug.Log ("Ability resolve - you should not see this");
 	}
 	
 	// Update is called once per frame

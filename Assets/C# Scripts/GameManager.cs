@@ -39,6 +39,8 @@ public class GameManager : MonoBehaviour {
 		inputManager.Allies = allies;
 		inputManager.Enemies = enemies;
 		inputManager.Select (playerCharA);
+		enemy.actionQueue.ParentChar = enemy;
+		enemy.Enqueue (playerCharA);
 	}
 	
 	// Update is called once per frame
@@ -132,7 +134,7 @@ public class GameManager : MonoBehaviour {
 		enemy.stats.Name = "Enemy";
 		enemy.stats.MaxHealth = 50;
 		enemy.stats.MaxMana = 30;
-		enemy.stats.Strength = 5;
+		enemy.stats.Strength = 10;
 		enemy.stats.Agility = 5;
 		enemy.stats.Intelligence = 5;
 		enemy.stats.InitializeCombatStats ();
