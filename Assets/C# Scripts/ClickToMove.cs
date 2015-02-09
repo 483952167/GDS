@@ -39,7 +39,7 @@ public class ClickToMove : MonoBehaviour {
 			
 			//Check if the ray hits any collider
 			if(Physics.Raycast(ray, out hit)) {
-                Debug.Log(hit.transform.gameObject.tag);
+				Debug.Log(hit.transform.gameObject.tag);
 				//set a flag to indicate to move the gameobject
 				flag = true;
 				//save the click / tap position

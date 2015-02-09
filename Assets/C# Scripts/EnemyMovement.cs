@@ -26,8 +26,8 @@ public class EnemyMovement : MonoBehaviour {
 		move ();
 		currentPosition = gameObject.transform.position;
 		targetPosition = target.gameObject.transform.position;
-        //Debug.Log ("enemy position" + currentPosition);
-        //Debug.Log ("target position" + targetPosition);
+		Debug.Log ("enemy position" + currentPosition);
+		Debug.Log ("target position" + targetPosition);
 	}
 
 	private void move () {

@@ -45,10 +45,11 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(Input.GetButtonDown("Regenerate Map"))
-        {
-            roomInstance.GenerateNextRoom();
-        }
+        	if(Input.GetButtonDown("Regenerate Map"))
+        	{
+            		roomInstance.GenerateNextRoom();
+        	}
+
 		/*inputManager.Allies = allies;
 		inputManager.Enemies = enemies;
 
@@ -85,7 +86,9 @@ public class GameManager : MonoBehaviour {
 		playerCharA.stats.Intelligence = 5;
 		playerCharA.stats.InitializeCombatStats ();*/
 		playerCharA.gameObject.AddComponent("ClickToMove");
-        roomInstance.SpawnCharacters(DoorPositions.WEST, playerCharA);
+
+	        roomInstance.SpawnCharacters(DoorPositions.WEST, playerCharA);
+
 		/*playerCharB = Instantiate (characterPrefab) as Character;
 		playerCharB.characterPrefab.SetParentChar (playerCharB);
 		playerCharB.characterPrefab.name = "Hero B Prefab";

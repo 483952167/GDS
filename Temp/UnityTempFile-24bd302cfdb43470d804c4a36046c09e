@@ -1,0 +1,66 @@
+-debug
+-target:library
+-nowarn:0169
+-out:'Temp/Assembly-CSharp.dll'
+-r:'/Applications/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll'
+-r:'/Applications/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll'
+-r:'/Applications/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll'
+-define:UNITY_4_6_1
+-define:UNITY_4_6
+-define:UNITY_STANDALONE_WIN
+-define:ENABLE_MICROPHONE
+-define:ENABLE_TEXTUREID_MAP
+-define:ENABLE_UNITYEVENTS
+-define:ENABLE_NEW_HIERARCHY 
+-define:ENABLE_AUDIO_FMOD
+-define:UNITY_STANDALONE
+-define:ENABLE_MONO
+-define:ENABLE_TERRAIN
+-define:ENABLE_SUBSTANCE
+-define:ENABLE_GENERICS
+-define:INCLUDE_WP8SUPPORT
+-define:ENABLE_MOVIES
+-define:ENABLE_WWW
+-define:ENABLE_IMAGEEFFECTS
+-define:ENABLE_4_6_FEATURES
+-define:INCLUDE_WP_BLUE_SUPPORT
+-define:ENABLE_WEBCAM
+-define:INCLUDE_METROSUPPORT
+-define:RENDER_SOFTWARE_CURSOR
+-define:ENABLE_NETWORK
+-define:ENABLE_PHYSICS
+-define:ENABLE_CACHING
+-define:ENABLE_CLOTH
+-define:ENABLE_2D_PHYSICS
+-define:ENABLE_SHADOWS
+-define:ENABLE_AUDIO
+-define:ENABLE_NAVMESH_CARVING
+-define:ENABLE_DUCK_TYPING
+-define:ENABLE_SINGLE_INSTANCE_BUILD_SETTING
+-define:ENABLE_PROFILER
+-define:UNITY_EDITOR
+-define:UNITY_EDITOR_OSX
+'Assets/C# Scripts/Ability.cs'
+'Assets/C# Scripts/AbilityTargetOption.cs'
+'Assets/C# Scripts/ActionQueue.cs'
+'Assets/C# Scripts/AttackOrder.cs'
+'Assets/C# Scripts/AttackType.cs'
+'Assets/C# Scripts/Buff.cs'
+'Assets/C# Scripts/Buffs/Slow.cs'
+'Assets/C# Scripts/CastOrder.cs'
+'Assets/C# Scripts/Character.cs'
+'Assets/C# Scripts/CharacterCollection.cs'
+'Assets/C# Scripts/CharacterInstance.cs'
+'Assets/C# Scripts/CharacterStats.cs'
+'Assets/C# Scripts/CharacterStatus.cs'
+'Assets/C# Scripts/ClickToMove.cs'
+'Assets/C# Scripts/CombatManager.cs'
+'Assets/C# Scripts/EnemyCollection.cs'
+'Assets/C# Scripts/EnemyMovement.cs'
+'Assets/C# Scripts/GameManager.cs'
+'Assets/C# Scripts/InputManager.cs'
+'Assets/C# Scripts/MovementOrder.cs'
+'Assets/C# Scripts/Room.cs'
+'Assets/C# Scripts/RoomCell.cs'
+-r:'/Applications/Unity.app/Contents/Frameworks/Mono/lib/mono/unity/System.Runtime.Serialization.dll'
+-r:'/Applications/Unity.app/Contents/Frameworks/Mono/lib/mono/unity/System.Xml.Linq.dll'
