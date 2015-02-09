@@ -254,16 +254,24 @@ public class Character : MonoBehaviour {
 		Character targetCharacter = currentOrder.targetCharacter;
 		Vector3 targetLocation = currentOrder.targetLocation;
 		Ability spell = currentOrder.spell;
-		Debug.Log ("timeUntilCast = " + timeUntilCast);
+
+		Vector3 characterVector = targetCharacter.getCharacterPosition () - character.transform.localPosition;
+		float targetDistance = characterVector.magnitude;
 
 		if (stats.CurrentMana < spell.manaCost)
 		{
 			Debug.Log ("Not enough mana!");
 		}
+		else if (targetDistance > spell.range)
+		{
+			characterVector.Normalize();
+			character.transform.localPosition += characterVector * Time.deltaTime * stats.MoveSpeed;
+		}
 		else
 		{
 			if (timeUntilCast > 0f)
 			{
+				Debug.Log ("timeUntilCast = " + timeUntilCast);
 				timeUntilCast -= Time.deltaTime;
 			}
 			else
