@@ -31,7 +31,6 @@ public class gui : MonoBehaviour {
 		float width_x = (Screen.width / 6);
 		style.normal.background = fullTex;
 		style_mana.normal.background = fullTex_mana;
-		Debug.Log (size.x);
 		
 		//draw the background:
 		GUI.BeginGroup (new Rect (pos.x, 10, width_x+60, size.y));
